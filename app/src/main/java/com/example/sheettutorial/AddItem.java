@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -19,7 +18,6 @@ import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +26,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
 
     EditText editTextItemName,editTextBrand;
     Button buttonAddItem;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,22 +38,28 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
 
         buttonAddItem = (Button)findViewById(R.id.btn_add_item);
         buttonAddItem.setOnClickListener(this);
-
-
     }
 
-    //This is the part where data is transaferred from Your Android phone to Sheet by using HTTP Rest API calls
 
-    private void   addItemToSheet() {
+    @Override
+    public void onClick(View v) {
+
+        if(v==buttonAddItem){
+            addItemToSheet();
+
+            //Define what to do when button is clicked
+        }
+    }
+
+    //This is the part where data is transferred from Your Android phone to Sheet by using HTTP Rest API calls
+
+    private void addItemToSheet() {
 
         final ProgressDialog loading = ProgressDialog.show(this,"Adding Item","Please wait");
         final String name = editTextItemName.getText().toString().trim();
         final String brand = editTextBrand.getText().toString().trim();
 
-
-
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycby6IRdJ5EfH2SK_6bSHXCuJbqrpNX_48zv-YJW5XiBIcbxwuak/exec",
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzWwsAeOarEgWf15k4bwLGqMoEI5XahoEuAU_imMEzohYTtY8S6/exec",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -90,24 +95,7 @@ public class AddItem extends AppCompatActivity implements View.OnClickListener {
 
         RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
         stringRequest.setRetryPolicy(retryPolicy);
-
         RequestQueue queue = Volley.newRequestQueue(this);
-
         queue.add(stringRequest);
-
-
-    }
-
-
-
-
-    @Override
-    public void onClick(View v) {
-
-        if(v==buttonAddItem){
-            addItemToSheet();
-
-            //Define what to do when button is clicked
-        }
     }
 }
