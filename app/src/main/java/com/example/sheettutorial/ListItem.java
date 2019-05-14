@@ -4,11 +4,10 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Adapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import com.android.volley.AuthFailureError;
+
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class ListItem extends AppCompatActivity {
 
@@ -36,7 +34,7 @@ public class ListItem extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_item);
 
-        listView = (ListView) findViewById(R.id.lv_items);
+        listView = (ListView) findViewById(R.id.lv_games);
 
         getItems();
 
@@ -47,7 +45,7 @@ public class ListItem extends AppCompatActivity {
 
         loading =  ProgressDialog.show(this,"Loading","please wait",false,true);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbzWwsAeOarEgWf15k4bwLGqMoEI5XahoEuAU_imMEzohYTtY8S6/exec?action=getItems",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.googleusercontent.com/macros/echo?user_content_key=WQEyx901HPt0NtfCWH_04YBrWS53RQxr5X1FnFtkK4IDv92Tg_oSQ-QjKbntrTk9K_3CybswKKR-W6a0ozfEr64k9thURt_Ym5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnMlkmrRl8uYlMsV6xgGdX7JaB5IxfeuALmEZDQyIqXkY0u18FaTYgjnYNPJua7JBkoc_azeePWaZYjHAbtibbXFiPFzang9C0g&lib=MwcRTHbOaXAOcLe4U_UtIkfgevZnNMH3F",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -80,22 +78,22 @@ public class ListItem extends AppCompatActivity {
 
         try {
             JSONObject jobj = new JSONObject(jsonResposnce);
-            JSONArray jarray = jobj.getJSONArray("items");
+            JSONArray jarray = jobj.getJSONArray("games");
 
 
             for (int i = 0; i < jarray.length(); i++) {
 
                 JSONObject jo = jarray.getJSONObject(i);
 
-                String itemName = jo.getString("itemName");
-                String brand = jo.getString("brand");
-                String price = jo.getString("price");
+                String gameDate = jo.getString("Date");
+                String ploeg = jo.getString("Ploeg");
+                String plaats = jo.getString("Plaats");
 
 
                 HashMap<String, String> item = new HashMap<>();
-                item.put("itemName", itemName);
-                item.put("brand", brand);
-                item.put("price",price);
+                item.put("Date", gameDate);
+                item.put("Ploeg", ploeg);
+                item.put("Plaats",plaats);
 
                 list.add(item);
 
@@ -107,7 +105,7 @@ public class ListItem extends AppCompatActivity {
 
 
         adapter = new SimpleAdapter(this,list,R.layout.list_item_row,
-                new String[]{"itemName","brand","price"},new int[]{R.id.tv_item_name,R.id.tv_brand,R.id.tv_price});
+                new String[]{"Ploeg","Plaats","Date"},new int[]{R.id.tv_ploeg,R.id.tv_plaats,R.id.tv_date});
 
 
         listView.setAdapter(adapter);
