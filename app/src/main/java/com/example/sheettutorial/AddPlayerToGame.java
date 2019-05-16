@@ -51,64 +51,19 @@ public class AddPlayerToGame extends AppCompatActivity implements View.OnClickLi
 
         if(v==buttonBevestig){
             getGame();
-            addNameToSheet();
+
 
             //Define what to do when button is clicked
         }
-    }
-
-    //This is the part where data is transferred from Your Android phone to Sheet by using HTTP Rest API calls
-
-    private void addNameToSheet() {
-
-        final ProgressDialog loading = ProgressDialog.show(this,"Bevestigen","Even geduld");
-        final String spelerNaam = editTextNaam.getText().toString().trim();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzxsTjbi4wuds0wBuQW3PrLMaEvbnAD9_-X4ROOn7wGBIZoYEA/exec",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-
-                        loading.dismiss();
-                        Toast.makeText(AddPlayerToGame.this,response,Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
-                        startActivity(intent);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                    }
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> parmas = new HashMap<>();
-
-                //here we pass params
-                parmas.put("action","addPlayer");
-                parmas.put("speler",spelerNaam);
-                parmas.put("ploeg",volgendePloeg.replaceAll(" ","").replaceAll("'",""));
-
-                return parmas;
-            }
-        };
-
-        int socketTimeOut = 50000;// u can change this .. here it is 50 seconds
-
-        RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
-        stringRequest.setRetryPolicy(retryPolicy);
-        RequestQueue queue = Volley.newRequestQueue(this);
-        queue.add(stringRequest);
     }
 
     // use the following methods to get the next game (naam van de volgende ploeg, om de speler in de juiste kolom toe te voegen)
 
     private void getGame(){
 
-        loading =  ProgressDialog.show(this,"Loading","please wait",false,true);
+        loading =  ProgressDialog.show(this,"Loading","Even geduld",false,true);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.googleusercontent.com/macros/echo?user_content_key=WQEyx901HPt0NtfCWH_04YBrWS53RQxr5X1FnFtkK4IDv92Tg_oSQ-QjKbntrTk9K_3CybswKKR-W6a0ozfEr64k9thURt_Ym5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnMlkmrRl8uYlMsV6xgGdX7JaB5IxfeuALmEZDQyIqXkY0u18FaTYgjnYNPJua7JBkoc_azeePWaZYjHAbtibbXFiPFzang9C0g&lib=MwcRTHbOaXAOcLe4U_UtIkfgevZnNMH3F",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -129,6 +84,7 @@ public class AddPlayerToGame extends AppCompatActivity implements View.OnClickLi
         stringRequest.setRetryPolicy(policy);
         RequestQueue queue = Volley.newRequestQueue(this);
         queue.add(stringRequest);
+
 
 
     }
@@ -158,6 +114,7 @@ public class AddPlayerToGame extends AppCompatActivity implements View.OnClickLi
                 if(date.compareTo(convertedDate) < 0) // Return value > 0 , if convertedDate is after the date argument.
                 {
                     volgendePloeg = ploeg;
+                    addNameToSheet(); // here the name is added to the sheet based on the next opponent
                     break;
                 }
 
@@ -168,6 +125,51 @@ public class AddPlayerToGame extends AppCompatActivity implements View.OnClickLi
             e.printStackTrace();
         }
 
-        loading.dismiss();
+
+    }
+
+    //This is the part where data is transferred from Your Android phone to Sheet by using HTTP Rest API calls
+
+    private void addNameToSheet() {
+
+        final String spelerNaam = editTextNaam.getText().toString().trim();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, "https://script.google.com/macros/s/AKfycbzxsTjbi4wuds0wBuQW3PrLMaEvbnAD9_-X4ROOn7wGBIZoYEA/exec",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+
+
+                        Toast.makeText(AddPlayerToGame.this,response,Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                        startActivity(intent);
+                        loading.dismiss();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> parmas = new HashMap<>();
+
+                //here we pass params
+                parmas.put("action","addPlayer");
+                parmas.put("speler",spelerNaam);
+                parmas.put("ploeg",volgendePloeg.replaceAll(" ","").replaceAll("'",""));
+
+                return parmas;
+            }
+        };
+
+        int socketTimeOut = 50000;// u can change this .. here it is 50 seconds
+
+        RetryPolicy retryPolicy = new DefaultRetryPolicy(socketTimeOut, 0, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT);
+        stringRequest.setRetryPolicy(retryPolicy);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        queue.add(stringRequest);
     }
 }

@@ -49,7 +49,7 @@ public class ListAllGames extends AppCompatActivity {
 
         loading =  ProgressDialog.show(this,"Loading","please wait",false,true);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.googleusercontent.com/macros/echo?user_content_key=WQEyx901HPt0NtfCWH_04YBrWS53RQxr5X1FnFtkK4IDv92Tg_oSQ-QjKbntrTk9K_3CybswKKR-W6a0ozfEr64k9thURt_Ym5_BxDlH2jW0nuo2oDemN9CCS2h10ox_1xSncGQajx_ryfhECjZEnMlkmrRl8uYlMsV6xgGdX7JaB5IxfeuALmEZDQyIqXkY0u18FaTYgjnYNPJua7JBkoc_azeePWaZYjHAbtibbXFiPFzang9C0g&lib=MwcRTHbOaXAOcLe4U_UtIkfgevZnNMH3F",
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, "https://script.google.com/macros/s/AKfycbz1FUSOUSlfWxaHUbnf0N6zMA_3xF_UqMl1PtEKQhjlxwQOf6w/exec?action=getGames",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
