@@ -10,7 +10,7 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button buttonAddItem,buttonListGames,buttonNextGame;
+    Button buttonAddItem,buttonListGames,buttonNextGame, buttonAanwezigheid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,12 +20,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        buttonAddItem = (Button)findViewById(R.id.btn_addItem );
-        buttonListGames = (Button)findViewById(R.id.btn_viewGames);
-        buttonNextGame = (Button)findViewById(R.id.btn_nextGame);
+        buttonAddItem = findViewById(R.id.btn_addItem );
+        buttonListGames = findViewById(R.id.btn_viewGames);
+        buttonNextGame = findViewById(R.id.btn_nextGame);
+        buttonAanwezigheid = findViewById(R.id.btn_aanwezigheid);
         buttonAddItem.setOnClickListener(this);
         buttonListGames.setOnClickListener(this);
         buttonNextGame.setOnClickListener(this);
+        buttonAanwezigheid.setOnClickListener(this);
     }
 
     @Override
@@ -46,6 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(v==buttonNextGame){
 
             Intent intent = new Intent(getApplicationContext(),NextGame.class);
+            startActivity(intent);
+        }
+
+        if(v==buttonAanwezigheid){
+
+            Intent intent = new Intent(getApplicationContext(), AddPlayerToGame.class);
             startActivity(intent);
         }
 
